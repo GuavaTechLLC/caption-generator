@@ -7,16 +7,16 @@ export default function Header() {
       <Link href="/" className="flex space-x-2">
         <Image
           alt="header text"
-          src="/imageIcon.png"
+          src="/thought-bubble.png"
           className="sm:w-14 sm:h-14 w-9 h-9"
           width={36}
           height={36}
         />
         <h1 className="sm:text-5xl text-3xl font-bold ml-2 tracking-tight">
-          restorePhotos.io
+          captionGenerator.io
         </h1>
       </Link>
-      <a
+      {/* <a
         href="https://vercel.com/templates/next.js/ai-photo-restorer"
         target="_blank"
         rel="noreferrer"
@@ -28,7 +28,7 @@ export default function Header() {
           width={32}
           height={28}
         />
-      </a>
+      </a> */}
     </header>
   );
 }

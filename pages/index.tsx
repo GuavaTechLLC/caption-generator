@@ -11,12 +11,12 @@ const Home: NextPage = () => {
   return (
     <div className="flex max-w-6xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
       <Head>
-        <title>Face Photo Restorer</title>
+        <title>Photo Caption Generator</title>
       </Head>
 
       <Header />
       <main className="flex flex-1 w-full flex-col items-center justify-center text-center px-4 sm:mt-28 mt-20">
-        <a
+        {/* <a
           href="https://twitter.com/nutlope/status/1620493265865957376"
           target="_blank"
           rel="noreferrer"
@@ -24,35 +24,35 @@ const Home: NextPage = () => {
         >
           Used by over <span className="font-semibold">100,000</span> happy
           customers
-        </a>
+        </a> */}
         <h1 className="mx-auto max-w-4xl font-display text-5xl font-bold tracking-normal text-slate-900 sm:text-7xl">
-          Restoring old photos{" "}
+          Find the perfect caption{" "}
           <span className="relative whitespace-nowrap text-[#3290EE]">
             <SquigglyLines />
             <span className="relative">using AI</span>
           </span>{" "}
-          for everyone.
+          for your social media photos.
         </h1>
 
         <p className="mx-auto mt-12 max-w-xl text-lg text-slate-700 leading-7">
-          Have old and blurry face photos? Let our AI restore them so those
-          memories can live on. 100% free – restore your photos today.
+          Have a great photo but can't think of a good Instagram caption? Upload your photo and let
+          our AI come up with it for you. 100% free.
         </p>
         <div className="flex justify-center space-x-4">
-          <a
+          {/* <a
             className="bg-white rounded-xl text-black font-medium px-4 py-3 sm:mt-10 mt-8 hover:bg-gray-100 border"
             href="https://youtu.be/FRQtFDDrUXQ"
             target="_blank"
             rel="noreferrer"
           >
             Learn how it's built
-          </a>
+          </a> */}
 
           <Link
             className="bg-black rounded-xl text-white font-medium px-4 py-3 sm:mt-10 mt-8 hover:bg-black/80"
             href="/restore"
           >
-            Restore your photos
+            Generate Captions
           </Link>
         </div>
         <div className="flex justify-between items-center w-full flex-col sm:mt-10 mt-6">
@@ -69,14 +69,21 @@ const Home: NextPage = () => {
                 />
               </div>
               <div className="sm:mt-0 mt-8">
-                <h2 className="mb-1 font-medium text-lg">Restored Photo</h2>
-                <Image
+                <h2 className="mb-1 font-medium text-lg">Generated Captions</h2>
+                {/* <Image
                   alt="Restored photo of my bro"
                   width={400}
                   height={400}
                   src="/michael-new.jpg"
                   className="w-96 h-96 rounded-2xl sm:mt-0 mt-2"
-                />
+                /> */}
+                <div className="bg-gray-100 w-96 h-96 rounded-2xl sm:mt-0 mt-2">
+                  <p className="pt-10">Caption Idea #1</p>
+                  <p className="pt-10">Caption Idea #2</p>
+                  <p className="pt-10">Caption Idea #3</p>
+                  <p className="pt-10">Caption Idea #4</p>
+                  <p className="pt-10">Caption Idea #5</p>
+                </div>
               </div>
             </div>
           </div>
