@@ -127,7 +127,7 @@ const Home: NextPage = () => {
               {restoredImage && originalPhoto && !sideBySide && (
                 <div className="flex sm:space-x-4 sm:flex-row flex-col">
                   <div>
-                    <h2 className="mb-1 font-medium text-lg">Original Photo</h2>
+                    <h2 className="mb-1 font-medium text-lg"></h2>
                     <Image
                       alt="original photo"
                       src={originalPhoto}
@@ -137,7 +137,7 @@ const Home: NextPage = () => {
                     />
                   </div>
                   <div className="sm:mt-0 mt-8">
-                    <h2 className="mb-1 font-medium text-lg">Restored Photo</h2>
+                    <h2 className="mb-1 font-medium text-lg">Captions:</h2>
                     <a href={restoredImage} target="_blank" rel="noreferrer">
                       <Image
                         alt="restored photo"

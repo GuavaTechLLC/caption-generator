@@ -2,6 +2,14 @@ import { Ratelimit } from "@upstash/ratelimit";
 import type { NextApiRequest, NextApiResponse } from "next";
 import requestIp from "request-ip";
 import redis from "../../utils/redis";
+import { Configuration, OpenAIApi } from "openai";
+
+
+const configuration = new Configuration({
+  organization: process.env.OPEN_AI_API_ORGANIZATION_ID,
+  apiKey: process.env.OPEN_AI_API_SECRET_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 type Data = string;
 interface ExtendedNextApiRequest extends NextApiRequest {
@@ -82,9 +90,24 @@ export default async function handler(
     //   return error;
     // }
   
-    const descriptionResult = await finalResponse.json();
-    console.log('IS IT HERE:', descriptionResult)
-    res.end(JSON.stringify(descriptionResult));
+    //  ----- THIS IS THE PART WHERE IM WAITING FOR SUPPORT  ------ 
+
+    // const descriptionResult = await finalResponse.json();
+    // console.log('IS IT HERE:', descriptionResult)
+    // res.end(JSON.stringify(descriptionResult));
+    const descriptionResult = "a man with a bald head wearing headphones"
+
+    const prompt = `Generate 5 Instagram captions for a photo of ${descriptionResult}`;
+
+    const openAIResponse = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: prompt,
+      max_tokens: 60,
+      n: 5,
+      temperature: 0.7
+    });
+
+    console.log('RES:', openAIResponse.data.choices)
   }
 
   // const prediction = await response.json();
