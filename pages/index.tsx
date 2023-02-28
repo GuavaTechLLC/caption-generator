@@ -62,7 +62,7 @@ const Home: NextPage = () => {
                 <h2 className="mb-1 font-medium text-lg">Original Photo</h2>
                 <Image
                   alt="Original photo of my bro"
-                  src="/michael.jpg"
+                  src="/originalPhoto.jpeg"
                   className="w-96 h-96 rounded-2xl"
                   width={400}
                   height={400}
@@ -78,11 +78,11 @@ const Home: NextPage = () => {
                   className="w-96 h-96 rounded-2xl sm:mt-0 mt-2"
                 /> */}
                 <div className="bg-gray-100 w-96 h-96 rounded-2xl sm:mt-0 mt-2">
-                  <p className="pt-10">Caption Idea #1</p>
-                  <p className="pt-10">Caption Idea #2</p>
-                  <p className="pt-10">Caption Idea #3</p>
-                  <p className="pt-10">Caption Idea #4</p>
-                  <p className="pt-10">Caption Idea #5</p>
+                  <p className="pt-10">1. 💙 Taking a dip with my special someone</p>
+                  <p className="pt-10">2. 💦 Making a splash with my love 💦</p>
+                  <p className="pt-10">3. Letting the current take us away ✨</p>
+                  <p className="pt-10"> 4. Life is better with you by my side 💕</p>
+                  <p className="pt-10">5. The best thing to hold onto in life is each other!</p>
                 </div>
               </div>
             </div>

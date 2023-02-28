@@ -15,6 +15,10 @@ import Toggle from "../components/Toggle";
 import appendNewToName from "../utils/appendNewToName";
 import downloadPhoto from "../utils/downloadPhoto";
 
+type CaptionData = {
+  text?: string;
+};
+
 // Configuration for the uploader
 const uploader = Uploader({
   apiKey: !!process.env.NEXT_PUBLIC_UPLOAD_API_KEY
@@ -30,7 +34,7 @@ const options = {
 
 const Home: NextPage = () => {
   const [originalPhoto, setOriginalPhoto] = useState<string | null>(null);
-  const [restoredImage, setRestoredImage] = useState<string | null>(null);
+  const [captions, setCaptions] = useState<Array<CaptionData> | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [restoredLoaded, setRestoredLoaded] = useState<boolean>(false);
   const [sideBySide, setSideBySide] = useState<boolean>(false);
@@ -45,7 +49,7 @@ const Home: NextPage = () => {
         if (file.length !== 0) {
           setPhotoName(file[0].originalFile.originalFileName);
           setOriginalPhoto(file[0].fileUrl.replace("raw", "thumbnail"));
-          generatePhoto(file[0].fileUrl.replace("raw", "thumbnail"));
+          generateCaptions(file[0].fileUrl.replace("raw", "thumbnail"));
         }
       }}
       width="670px"
@@ -53,7 +57,7 @@ const Home: NextPage = () => {
     />
   );
 
-  async function generatePhoto(fileUrl: string) {
+  async function generateCaptions(fileUrl: string) {
     await new Promise((resolve) => setTimeout(resolve, 500));
     setLoading(true);
     const res = await fetch("/api/generate", {
@@ -64,11 +68,11 @@ const Home: NextPage = () => {
       body: JSON.stringify({ imageUrl: fileUrl }),
     });
 
-    let newPhoto = await res.json();
+    let captionList = await res.json();
     if (res.status !== 200) {
-      setError(newPhoto);
+      setError(captionList);
     } else {
-      setRestoredImage(newPhoto);
+      setCaptions(JSON.parse(captionList));
     }
     setLoading(false);
   }
@@ -108,14 +112,14 @@ const Home: NextPage = () => {
                 sideBySide={sideBySide}
                 setSideBySide={(newVal) => setSideBySide(newVal)}
               />
-              {restoredLoaded && sideBySide && (
+              {/* {restoredLoaded && sideBySide && (
                 <CompareSlider
                   original={originalPhoto!}
                   restored={restoredImage!}
                 />
-              )}
+              )} */}
               {!originalPhoto && <UploadDropZone />}
-              {originalPhoto && !restoredImage && (
+              {originalPhoto && !captions && (
                 <Image
                   alt="original photo"
                   src={originalPhoto}
@@ -124,7 +128,7 @@ const Home: NextPage = () => {
                   height={475}
                 />
               )}
-              {restoredImage && originalPhoto && !sideBySide && (
+              {captions && originalPhoto && !sideBySide && (
                 <div className="flex sm:space-x-4 sm:flex-row flex-col">
                   <div>
                     <h2 className="mb-1 font-medium text-lg"></h2>
@@ -138,7 +142,10 @@ const Home: NextPage = () => {
                   </div>
                   <div className="sm:mt-0 mt-8">
                     <h2 className="mb-1 font-medium text-lg">Captions:</h2>
-                    <a href={restoredImage} target="_blank" rel="noreferrer">
+                    {captions.map((caption) => 
+                      <p>{caption.text}</p>
+                    )}
+                    {/* <a href={restoredImage} target="_blank" rel="noreferrer">
                       <Image
                         alt="restored photo"
                         src={restoredImage}
@@ -147,7 +154,7 @@ const Home: NextPage = () => {
                         height={475}
                         onLoadingComplete={() => setRestoredLoaded(true)}
                       />
-                    </a>
+                    </a> */}
                   </div>
                 </div>
               )}
@@ -174,7 +181,7 @@ const Home: NextPage = () => {
                   <button
                     onClick={() => {
                       setOriginalPhoto(null);
-                      setRestoredImage(null);
+                      setCaptions(null);
                       setRestoredLoaded(false);
                       setError(null);
                     }}
@@ -183,19 +190,19 @@ const Home: NextPage = () => {
                     Upload New Photo
                   </button>
                 )}
-                {restoredLoaded && (
+                {/* {restoredLoaded && (
                   <button
                     onClick={() => {
-                      downloadPhoto(
-                        restoredImage!,
-                        appendNewToName(photoName!)
-                      );
+                      // downloadPhoto(
+                      //   captions!,
+                      //   appendNewToName(photoName!)
+                      // );
                     }}
                     className="bg-white rounded-full text-black border font-medium px-4 py-2 mt-8 hover:bg-gray-100 transition"
                   >
                     Download Restored Photo
                   </button>
-                )}
+                )} */}
               </div>
             </motion.div>
           </AnimatePresence>

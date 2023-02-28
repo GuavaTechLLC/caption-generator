@@ -48,7 +48,7 @@ export default async function handler(
   }
 
   const imageUrl = req.body.imageUrl;
-  // POST request to Replicate to start the image restoration generation process
+  // POST request to Replicate to start the image description text generation process
   let response = await fetch("https://api.replicate.com/v1/predictions", {
     method: "POST",
     headers: {
@@ -65,81 +65,62 @@ export default async function handler(
   let prediction = await response.json();
   let endpointUrl = prediction.urls.get;
 
-
-  // if (response.status !== 201) {
-  //   let error = await response.json();
-  //   // res.statusCode = 500;
-  //   // res.end(JSON.stringify({ detail: error.detail }));
-  //   return error;
-  // }
+  if (response.status !== 201) {
+    let error = await response.json();
+    res.statusCode = 500;
+    res.end(JSON.stringify({ detail: error.detail }));
+    return error;
+  }
 
   if (endpointUrl) {
-    const finalResponse = await fetch(
-      endpointUrl,
-      {
+
+    let imageDescription: string | null = null;
+
+    while (!imageDescription) {
+      // Loop in 1s intervals until the image description text is ready
+      console.log("polling for result...", endpointUrl);
+      let finalResponse = await fetch(endpointUrl, {
+        method: "GET",
         headers: {
-          Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+          Authorization: "Token " + process.env.REPLICATE_API_KEY,
           "Content-Type": "application/json",
         },
+      });
+      let jsonFinalResponse = await finalResponse.json();
+
+      if (jsonFinalResponse.status === "succeeded") {
+        imageDescription = jsonFinalResponse.output;
+        callOpenAiAPI(imageDescription);
+        break;
+      } else if (jsonFinalResponse.status === "failed") {
+        break;
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-    );
-    // if (finalResponse.status !== 200) {
-    //   let error = await finalResponse.json();
-    //   // res.statusCode = 500;
-    //   // res.end(JSON.stringify({ detail: error.detail }));
-    //   return error;
-    // }
-  
-    //  ----- THIS IS THE PART WHERE IM WAITING FOR SUPPORT  ------ 
+    }
 
-    // const descriptionResult = await finalResponse.json();
-    // console.log('IS IT HERE:', descriptionResult)
-    // res.end(JSON.stringify(descriptionResult));
-    const descriptionResult = "a man with a bald head wearing headphones"
+  }
 
-    const prompt = `Generate 5 Instagram captions for a photo of ${descriptionResult}`;
+  // Call OpenAI API to get captions from image description text
+  async function callOpenAiAPI(imageDescription: string | null) {
+
+    let captionList = null;
+    const prompt = `Generate 5 Instagram captions for a photo of ${imageDescription}`;
 
     const openAIResponse = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
       max_tokens: 60,
-      n: 5,
+      n: 1,
       temperature: 0.7
     });
 
-    console.log('RES:', openAIResponse.data.choices)
+    captionList = JSON.stringify(openAIResponse.data.choices);
+
+    res
+    .status(200)
+    .json(captionList ? captionList : "Failed to fetch captions");
+
   }
 
-  // const prediction = await response.json();
-  // res.statusCode = 201;
-  // console.log(JSON.stringify(prediction))
-  // res.end(JSON.stringify(prediction));
-
-
-  // GET request to get the status of the image restoration process & return the result when it's ready
-  // let restoredImage: string | null = null;
-  // while (!restoredImage) {
-  //   // Loop in 1s intervals until the alt text is ready
-  //   console.log("polling for result...", endpointUrl);
-  //   let finalResponse = await fetch(endpointUrl, {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: "Token " + process.env.REPLICATE_API_KEY,
-  //     },
-  //   });
-  //   let jsonFinalResponse = await finalResponse.json();
-
-  //   if (jsonFinalResponse.status === "succeeded") {
-  //     console.log('SUCCESS', jsonFinalResponse)
-  //     // restoredImage = jsonFinalResponse.output;
-  //   } else if (jsonFinalResponse.status === "failed") {
-  //     break;
-  //   } else {
-  //     await new Promise((resolve) => setTimeout(resolve, 1000));
-  //   }
-  // }
-  // res
-  //   .status(200)
-  //   .json(restoredImage ? restoredImage : "Failed to restore image");
 }
