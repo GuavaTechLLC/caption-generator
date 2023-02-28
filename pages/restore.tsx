@@ -72,6 +72,7 @@ const Home: NextPage = () => {
     if (res.status !== 200) {
       setError(captionList);
     } else {
+      console.log(JSON.parse(captionList))
       setCaptions(JSON.parse(captionList));
     }
     setLoading(false);
@@ -187,7 +188,7 @@ const Home: NextPage = () => {
                     }}
                     className="bg-black rounded-full text-white font-medium px-4 py-2 mt-8 hover:bg-black/80 transition"
                   >
-                    Upload New Photo
+                    Upload New Photo or Retry
                   </button>
                 )}
                 {/* {restoredLoaded && (
